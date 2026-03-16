@@ -27,7 +27,11 @@ with col2:
 with col3:
     st.write("Frecuencia de ventas por producto:")
     st.write(df['producto'].value_counts())
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Aquí básicamente estamos dando un primer vistazo a los datos. Usé Streamlit para armar 3 columnas y mostrar unas métricas rápidas: veo cuántos productos diferentes tenemos en el archivo, qué categorías hay y cuáles son los que más veces se han registrado. Es como un resumen táctico para entender con qué información estoy lidiando antes de meterle mano." , key="reflexion_paso_2")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Aquí básicamente damos un primer vistazo a los datos. Usamos Streamlit para mostrar métricas rápidas: cuántos productos diferentes tenemos, qué categorías hay y cuáles son los que más se repiten o venden (frecuencia). Es necesario para entender la estructura de la base de datos antes de limpiarla.", 
+    key="reflexion_paso_2"
+)
 
 
 
@@ -47,7 +51,11 @@ df['cantidad'] = df['cantidad'].fillna(1)
 
 st.success("✅ Limpieza automátizada: Duplicados removidos, números corregidos y nulos rellenados.")
 st.dataframe(df)
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Esta parte es súper importante porque los datos casi nunca vienen perfectos. Primero eliminé las filas que estaban repetidas basándome en el ID, porque me di cuenta de que había registros duplicados. Luego forcé la columna de cantidad a formato numérico (a veces el CSV lo lee como texto) y, finalmente, si a algún registro le faltaba la cantidad, le puse '1' por defecto para que no me dañe los cálculos más adelante. Con eso la tabla ya queda limpia. ", key="reflexion_paso_3")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Esta parte es nuestra limpieza de datos. Básicamente lo que se hizo fue quitar las filas repetidas usando el ID, asegurarnos de que la cantidad de productos fuera un número (a veces hay errores en el archivo original) y si faltaba la cantidad, se asumió que era 1 para que las cuentas de más adelante no den error.", 
+    key="reflexion_paso_3"
+)
 
 
 
@@ -67,7 +75,11 @@ reporte_ejecutivo = df.rename(columns={
 
 st.write("Top de ventas del mes (Ordenado):")
 st.dataframe(reporte_ejecutivo[['ID Pedido', 'Producto', 'Venta Total ($)']].head(10))
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Acá ya empezamos a sacar las cuentas de verdad. Multipliqué el precio por la cantidad para tener la plata real que entró (ingreso bruto). Después, en vez de dejar los nombres feos de las columnas, los renombré a cosas más claras como 'ID Pedido' o 'Venta Total'. Por último, ordené esa tabla de mayor a menor para que los mejores pedidos salgan de primeritos.", key="reflexion_paso_4")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Acá ya empezamos a ver plata. Multiplicamos el precio del producto por la cantidad para saber cuánto se vendió. También le cambié el nombre a las columnas para que se vean más bonitas en el reporte final y organicé la tabla de mayor a menor para ver enseguida cuáles fueron los productos que más plata dejaron.", 
+    key="reflexion_paso_4"
+)
 
 
 
@@ -89,7 +101,11 @@ df_final = df[(df['tipo'].isin(ciudades_filtro)) & (df['Ingreso_Bruto'] >= monto
 
 st.subheader("📋 Pedidos Filtrados")
 st.table(df_final)
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Le metí un panel lateral interactivo con dos filtros: uno para poder chulear qué categorías quiero ver y una barrita (slider) para filtrar ventas que superen x cantidad de plata. Lo chévere aquí es que crucé las dos condiciones con un '&', así la tabla final solo me muestra las ventas que cumplan ambas cosas al mismo tiempo. Súper útil para buscar datos específicos rapidito.", key="reflexion_paso_5")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Aquí se agrego un menú a la izquierda para poder filtrar la información. Contiene dos opciones: una para elegir la categoría del producto y otra para ver solo las ventas que pasen de cierta cantidad de plata. Lo bueno es que ambos filtros funcionan a la vez, así es mucho más fácil buscar algo puntual.", 
+    key="reflexion_paso_5"
+)
 
 
 
@@ -101,7 +117,11 @@ resumen = df.groupby('tipo')['Ingreso_Bruto'].agg(['sum', 'count', 'mean']).roun
 st.write(resumen)
 
 st.bar_chart(resumen['sum'])
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Para esta sección quería algo más visual y resumido. Lo que hice fue agrupar toda la información por 'tipo' de producto y de ahí saqué el total sumado, la cantidad de registros y el promedio de ventas. Ya con esa tabla armada, le pasé el total a un gráfico de barras para que sea evidente a ojo cuál categoría nos está dejando más ingresos.", key="reflexion_paso_6")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Para esta parte se agruparon los datos por la categoría del producto (si es café, postre, etc.) y sumé cuánto entró por cada una. Con esa información armé un gráfico de barras, que me parece la forma más rápida y visual de darse cuenta qué tipo de producto es el que más nos está haciendo ganar.", 
+    key="reflexion_paso_6"
+)
 
 
 
@@ -116,4 +136,8 @@ df_maestro = pd.merge(df, proveedores, on='producto', how='left')
 
 st.header("🏢 Contacto de Proveedores por Pedido")
 st.dataframe(df_maestro[['id', 'producto', 'Proveedor']])
-st.text_area("✍️ Tu explicación (Propias palabras, sin IA): Al final me armé una tablita chiquita a mano con los nombres cruzados de productos y sus respectivos proveedores. Usé un 'merge' (que es básicamente hacer un BuscarV de Excel pero en código) para unir nuestras ventas principales con esa tablita de proveedores usando el nombre del producto como conexión. Le puse tipo 'left' para que no se me pierdan registros de ventas si de casualidad a algún producto le falta el proveedor.", key="reflexion_paso_7")
+st.text_area(
+    "✍️ Tu explicación (Propias palabras, sin IA):", 
+    value="Por último, se creó una tabla pequeñita con los nombres de los proveedores. Lo que se hizo fue cruzar esa tabla nueva con la tabla principal de ventas que ya teníamos, usando el nombre del producto para emparejarlos. Así ahora podemos ver el registro de ventas y al lado a quién le compramos ese producto.", 
+    key="reflexion_paso_7"
+)
